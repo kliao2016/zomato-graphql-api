@@ -1,8 +1,9 @@
 import { RequestOptions, RESTDataSource } from 'apollo-datasource-rest';
 import camelCaseKeys from 'camelcase-keys';
+import { config } from './api-config';
 
-const ACCESS_KEY = '9c62363fc593535243a5c64b2e2556f4';
-const API_URL = 'https://developers.zomato.com/api/v2.1/';
+const ACCESS_KEY = config.ACCESS_KEY;
+const API_URL = config.API_URL;
 
 export class ZomatoAPI extends RESTDataSource {
     constructor() {
