@@ -21,9 +21,16 @@ const typeDefs = gql`
         name: String!
     }
 
+    type Dish {
+        id: ID!
+        name: String!
+        price: String
+    }
+
     type Query {
         search(location: String!): [Restaurant]
         establishments(location: String!): [Establishment]
+        dailyMenu(restaurantId: String!): [Dish]
     }
 `;
 
@@ -34,6 +41,9 @@ const queryResolvers = {
         },
         establishments(_, { location }, { dataSources }) {
             return dataSources.zomatoAPI.getEstablishmentsAtLocation(location);
+        },
+        dailyMenu(_, { restaurantId }, { dataSources }) {
+            return dataSources.zomatoAPI.getRestaurantDailyMenu(restaurantId);
         }
     }
 }

@@ -30,11 +30,9 @@ export class ZomatoAPI extends RESTDataSource {
             query: location
         });
 
-        let camelLocationRes = camelCaseKeys(locationRes, { deep: true });
-
         var regionId = DEFAULT_REGION_ID;
-        if (camelLocationRes.locationSuggestions.length > 0) {
-            regionId = camelLocationRes.locationSuggestions[0].entityId;
+        if (locationRes.location_suggestions.length > 0) {
+            regionId = locationRes.location_suggestions[0].entity_id;
         }
     
         // TODO: Error handling
@@ -68,11 +66,9 @@ export class ZomatoAPI extends RESTDataSource {
             query: location
         });
 
-        let camelLocationRes = camelCaseKeys(locationRes, { deep: true });
-
         var regionId = DEFAULT_REGION_ID;
-        if (camelLocationRes.locationSuggestions.length > 0) {
-            regionId = camelLocationRes.locationSuggestions[0].entityId;
+        if (locationRes.location_suggestions.length > 0) {
+            regionId = locationRes.location_suggestions[0].entity_id;
         }
 
         let establishmentData = await this.get('establishments', {
@@ -94,6 +90,27 @@ export class ZomatoAPI extends RESTDataSource {
         }
 
         return camelCaseKeys(establishments, { deep: true });
+    }
+
+    async getRestaurantDailyMenu(restaurantId: string) {
+        let menuData = await this.get('dailymenu', {
+            res_id: restaurantId
+        })
+
+        var menuItems = [];
+        if (menuData.daily_menus.length > 0) {
+            let dailyMenu = menuData.daily_menus[0];
+            for (var i = 0; i < dailyMenu.daily_menu.dishes.length; i++) {
+                let obj = dailyMenu.daily_menu.dishes[i].dish;
+                let dish = {
+                    id: obj.dish_id,
+                    name: obj.name,
+                    price: obj.price
+                }
+                menuItems.push(dish)
+            }
+        }
+        return camelCaseKeys(menuItems, { deep: true });
     }
 }
 
