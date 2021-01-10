@@ -16,8 +16,14 @@ const typeDefs = gql`
         cuisines: String
     }
 
+    type Establishment {
+        id: ID!
+        name: String!
+    }
+
     type Query {
         search(location: String!): [Restaurant]
+        establishments(location: String!): [Establishment]
     }
 `;
 
@@ -25,6 +31,9 @@ const queryResolvers = {
     Query: {
         search(_, { location }, { dataSources }) {
             return dataSources.zomatoAPI.searchForRestaurantsAtLocation(location);
+        },
+        establishments(_, { location }, { dataSources }) {
+            return dataSources.zomatoAPI.getEstablishmentsAtLocation(location);
         }
     }
 }
